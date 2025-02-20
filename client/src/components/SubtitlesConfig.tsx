@@ -62,7 +62,7 @@ export default function SubtitlesConfig({ onChange }: Props) {
             <Label>Tamaño de fuente</Label>
             <Slider
               value={[config.fontSize]}
-              onValueChange={([value]) => setConfig(prev => ({ ...prev, fontSize: value }))}
+              onValueChange={([value]) => setConfig((prev) => ({ ...prev, fontSize: value }))}
               min={16}
               max={48}
               step={2}
@@ -76,13 +76,13 @@ export default function SubtitlesConfig({ onChange }: Props) {
             <Label>Tipo de fuente</Label>
             <Select
               value={config.fontFamily}
-              onValueChange={(value) => setConfig(prev => ({ ...prev, fontFamily: value }))}
+              onValueChange={(value) => setConfig((prev) => ({ ...prev, fontFamily: value }))}
             >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {FONT_FAMILIES.map(font => (
+                {FONT_FAMILIES.map((font) => (
                   <SelectItem key={font.value} value={font.value}>
                     {font.label}
                   </SelectItem>
@@ -95,13 +95,13 @@ export default function SubtitlesConfig({ onChange }: Props) {
             <Label>Color</Label>
             <Select
               value={config.color}
-              onValueChange={(value) => setConfig(prev => ({ ...prev, color: value }))}
+              onValueChange={(value) => setConfig((prev) => ({ ...prev, color: value }))}
             >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                {COLORS.map(color => (
+                {COLORS.map((color) => (
                   <SelectItem key={color.value} value={color.value}>
                     {color.label}
                   </SelectItem>
@@ -114,14 +114,4 @@ export default function SubtitlesConfig({ onChange }: Props) {
             <div className="text-center" style={{
               fontSize: `${config.fontSize}px`,
               fontFamily: config.fontFamily,
-              color: config.color,
-              textShadow: "2px 2px 4px rgba(0,0,0,0.5)"
-            }}>
-              Vista previa
-            </div>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-}
+             

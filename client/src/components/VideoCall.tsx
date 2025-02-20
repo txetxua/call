@@ -33,6 +33,9 @@ export default function VideoCall({ roomId, language, onLanguageChange }: Props)
   });
 
   useEffect(() => {
+    let audioContext: AudioContext | null = null;
+    let analyser: AnalyserNode | null = null;
+
     async function setupCall() {
       try {
         console.log("[VideoCall] Setting up call for room:", roomId, "language:", language);
@@ -42,13 +45,13 @@ export default function VideoCall({ roomId, language, onLanguageChange }: Props)
           audio: {
             echoCancellation: true,
             noiseSuppression: true,
-            autoGainControl: true
-          }
+            autoGainControl: true,
+          },
         });
 
-        const audioContext = new AudioContext();
+        audioContext = new AudioContext();
         const mediaStreamSource = audioContext.createMediaStreamSource(stream);
-        const analyser = audioContext.createAnalyser();
+        analyser = audioContext.createAnalyser();
         analyser.fftSize = 256;
         mediaStreamSource.connect(analyser);
 
@@ -63,7 +66,7 @@ export default function VideoCall({ roomId, language, onLanguageChange }: Props)
 
         if (localVideoRef.current) {
           localVideoRef.current.srcObject = stream;
-          await localVideoRef.current.play().catch(error => {
+          await localVideoRef.current.play().catch((error) => {
             console.warn("[VideoCall] Local video autoplay failed:", error);
           });
         }
@@ -80,7 +83,7 @@ export default function VideoCall({ roomId, language, onLanguageChange }: Props)
             toast({
               variant: "destructive",
               title: "Error de reconocimiento de voz",
-              description: error.message
+              description: error.message,
             });
           }
         );
@@ -99,7 +102,7 @@ export default function VideoCall({ roomId, language, onLanguageChange }: Props)
                 toast({
                   variant: "destructive",
                   title: "Error de reproducción",
-                  description: "No se pudo reproducir el video remoto automáticamente. Intente hacer clic en la pantalla."
+                  description: "No se pudo reproducir el video remoto automáticamente. Intente hacer clic en la pantalla.",
                 });
               }
             }
@@ -107,14 +110,14 @@ export default function VideoCall({ roomId, language, onLanguageChange }: Props)
           (state) => {
             console.log("[VideoCall] Connection state:", state);
             setConnectionState(state);
-            if (state === 'connected') {
+            if (state === "connected") {
               setError(undefined);
               toast({
                 title: "Conectado",
-                description: "La conexión se ha establecido correctamente"
+                description: "La conexión se ha establecido correctamente",
               });
               speechRef.current?.start();
-            } else if (state === 'failed' || state === 'disconnected') {
+            } else if (state === "failed" || state === "disconnected") {
               setError("La conexión se ha perdido. Intentando reconectar...");
               speechRef.current?.stop();
             }
@@ -125,7 +128,7 @@ export default function VideoCall({ roomId, language, onLanguageChange }: Props)
             toast({
               variant: "destructive",
               title: "Error de conexión",
-              description: error.message
+              description: error.message,
             });
           }
         );
@@ -133,18 +136,18 @@ export default function VideoCall({ roomId, language, onLanguageChange }: Props)
         await webrtc.start(stream);
         webrtcRef.current = webrtc;
         speechRef.current.start();
-
       } catch (error: any) {
         console.error("[VideoCall] Setup error:", error);
-        const errorMessage = error.name === 'NotAllowedError'
-          ? "No se ha permitido el acceso a la cámara y micrófono. Por favor, conceda los permisos necesarios."
-          : error.message;
+        const errorMessage =
+          error.name === "NotAllowedError"
+            ? "No se ha permitido el acceso a la cámara y micrófono. Por favor, conceda los permisos necesarios."
+            : error.message;
 
         setError(errorMessage);
         toast({
           variant: "destructive",
           title: "Error",
-          description: errorMessage
+          description: errorMessage,
         });
       }
     }
@@ -158,6 +161,12 @@ export default function VideoCall({ roomId, language, onLanguageChange }: Props)
       }
       if (speechRef.current) {
         speechRef.current.stop();
+      }
+      if (analyser) {
+        analyser.disconnect();
+      }
+      if (audioContext) {
+        audioContext.close();
       }
     };
   }, [roomId, language, toast]);

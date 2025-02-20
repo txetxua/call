@@ -13,7 +13,7 @@ interface Props {
   onHangup: () => void;
 }
 
-export default function CallControls({ 
+export default function CallControls({
   language,
   onLanguageChange,
   connectionState,
@@ -29,70 +29,77 @@ export default function CallControls({
     navigator.clipboard.writeText(url).then(() => {
       toast({
         description: "Enlace copiado al portapapeles",
-        duration: 2000
+        duration: 2000,
       });
     });
   };
 
   const toggleVideo = () => {
-    const videoTrack = document.querySelector('video')?.srcObject
-      ?.getTracks()
-      .find(track => track.kind === 'video');
+    const videoTracks = document.querySelector("video")?.srcObject?.getTracks();
+    const videoTrack = videoTracks?.find((track) => track.kind === "video");
 
     if (videoTrack) {
       videoTrack.enabled = !videoEnabled;
       setVideoEnabled(!videoEnabled);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No se encontró el track de video",
+      });
     }
   };
 
   const toggleAudio = () => {
-    const audioTrack = document.querySelector('video')?.srcObject
-      ?.getTracks()
-      .find(track => track.kind === 'audio');
+    const audioTracks = document.querySelector("video")?.srcObject?.getTracks();
+    const audioTrack = audioTracks?.find((track) => track.kind === "audio");
 
     if (audioTrack) {
       audioTrack.enabled = !audioEnabled;
       setAudioEnabled(!audioEnabled);
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "No se encontró el track de audio",
+      });
     }
   };
 
   const getConnectionStatusText = () => {
     switch (connectionState) {
-      case 'new':
-        return 'Iniciando...';
-      case 'connecting':
-        return 'Conectando...';
-      case 'connected':
-        return 'Conectado';
-      case 'disconnected':
-        return 'Desconectado';
-      case 'failed':
-        return 'Error de conexión';
-      case 'closed':
-        return 'Llamada finalizada';
+      case "new":
+        return "Iniciando...";
+      case "connecting":
+        return "Conectando...";
+      case "connected":
+        return "Conectado";
+      case "disconnected":
+        return "Desconectado";
+      case "failed":
+        return "Error de conexión";
+      case "closed":
+        return "Llamada finalizada";
       default:
-        return 'Conectando...';
+        return "Conectando...";
     }
   };
 
   const getConnectionStatusClass = () => {
     switch (connectionState) {
-      case 'connected':
-        return 'text-green-500';
-      case 'failed':
-      case 'disconnected':
-        return 'text-red-500';
+      case "connected":
+        return "text-green-500";
+      case "failed":
+      case "disconnected":
+        return "text-red-500";
       default:
-        return 'text-muted-foreground';
+        return "text-muted-foreground";
     }
   };
 
   return (
     <div className="absolute bottom-0 left-0 right-0 h-20 bg-black/40 backdrop-blur-sm flex items-center justify-center gap-4 px-4">
-      <Select
-        value={language}
-        onValueChange={(value) => onLanguageChange(value as Language)}
-      >
+      <Select value={language} onValueChange={(value) => onLanguageChange(value as Language)}>
         <SelectTrigger className="w-32 bg-black/60">
           <SelectValue />
         </SelectTrigger>

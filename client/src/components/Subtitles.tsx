@@ -23,14 +23,11 @@ export default function Subtitles({ transcript, config }: Props) {
     lineHeight: "1.5",
     whiteSpace: "pre-wrap",
     wordWrap: "break-word",
-    zIndex: 50
+    zIndex: 50,
   } as const;
 
   return (
-    <div 
-      className="text-center relative"
-      style={subtitleStyle}
-    >
+    <div className="text-center relative" style={subtitleStyle}>
       {transcript}
     </div>
   );
