@@ -114,4 +114,14 @@ export default function SubtitlesConfig({ onChange }: Props) {
             <div className="text-center" style={{
               fontSize: `${config.fontSize}px`,
               fontFamily: config.fontFamily,
-             
+              color: config.color,
+              textShadow: "2px 2px 4px rgba(0,0,0,0.5)",
+            }}>
+              Vista previa
+            </div>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
