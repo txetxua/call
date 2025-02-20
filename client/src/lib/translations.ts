@@ -23,7 +23,8 @@ export class TranslationHandler {
     try {
       this.cleanup();
 
-      const sseUrl = new URL(`${window.location.origin}/api/translations/stream/${this.roomId}`);
+      const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+      const sseUrl = new URL(`${protocol}//${window.location.host}/api/translations/stream/${this.roomId}`);
       sseUrl.searchParams.set('language', this.language);
 
       console.log("[Translations] Connecting to:", sseUrl.toString());
@@ -96,7 +97,10 @@ export class TranslationHandler {
 
       const targetLanguage = this.language === "es" ? "it" : "es";
 
-      const response = await fetch(`/api/translate`, {
+      const protocol = window.location.protocol === 'https:' ? 'https:' : 'http:';
+      const url = `${protocol}//${window.location.host}/api/translate`;
+
+      const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
