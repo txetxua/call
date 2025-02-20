@@ -73,7 +73,7 @@ app.use((req, res, next) => {
       serveStatic(app);
     }
 
-    const PORT = 5000;
+    const PORT = process.env.PORT || 5000; // Usa el puerto de Railway o 5000 por defecto
     server.listen(PORT, "0.0.0.0", () => {
       log(`Server running on port ${PORT}`);
       log(`WebSocket server available at wss://0.0.0.0:${PORT}/ws`);
