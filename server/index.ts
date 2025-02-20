@@ -1,4 +1,4 @@
-import express, { type Request, Response, NextFunction } from "express";
+import express from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
@@ -6,24 +6,24 @@ const app = express();
 
 // Enhanced CORS and WebSocket middleware
 app.use((req, res, next) => {
-  const origin = req.headers.origin || '*';
+  const origin = req.headers.origin || "*";
 
   // Basic CORS headers
-  res.header('Access-Control-Allow-Origin', origin);
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header("Access-Control-Allow-Origin", origin);
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
 
   // Handle WebSocket upgrade requests
-  if (req.headers.upgrade === 'websocket') {
-    res.removeHeader('Connection');
-    res.removeHeader('Upgrade');
+  if (req.headers.upgrade === "websocket") {
+    res.removeHeader("Connection");
+    res.removeHeader("Upgrade");
     next();
     return;
   }
 
   // Handle preflight requests
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     res.sendStatus(200);
     return;
   }
@@ -60,7 +60,7 @@ app.use((req, res, next) => {
     const server = await registerRoutes(app);
 
     // Error handling middleware
-    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+    app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
       console.error("[Server] Error:", err);
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
